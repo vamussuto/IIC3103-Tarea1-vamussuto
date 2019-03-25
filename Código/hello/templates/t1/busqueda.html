@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<h2>Tarea 1</h2>
+<br> </br><h4>Realiza una búsqueda de películas, personas, naves o planetas para saber más sobre estos</h4>
+<form type="get" action="{%url 'busqueda'%}" style="margin: 0">
+    <input  id="q" type="text" name="q"  placeholder="Ingerese texto..." >
+    <button id="search_submit" type="submit" >Buscar</button>
+</form><br> </br>
+<h4>Resultados de la búsqueda</h4>
+<div class="container">
+    <dd>{{error}}</dd>
+    {% for i in peliculas%}
+         <dd><a href="/pelicula/{{i.id}}/" >{{ i.nombre }}</a></dd>
+        {% endfor %}
+    {% for i in planetas%}
+         <dd><a href="/planeta/{{i.id}}/" >{{ i.nombre }}</a></dd>
+        {% endfor %}
+    {% for i in naves%}
+         <dd><a href="/nave/{{i.id}}/" >{{ i.nombre }}</a></dd>
+        {% endfor %}
+    {% for i in personajes%}
+         <dd><a href="/personaje/{{i.id}}/" >{{ i.nombre }}</a></dd>
+        {% endfor %}
+
+
+
+
+</div>
+
+
+{% endblock %}
+

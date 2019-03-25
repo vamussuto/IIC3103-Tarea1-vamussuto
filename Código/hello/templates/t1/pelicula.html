@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<h2>Tarea 1</h2>
+<br> </br><h4>Realiza una búsqueda de películas, personas, naves o planetas para saber más sobre estos</h4>
+<form type="get" action="{%url 'busqueda'%}" style="margin: 0">
+    <input  id="q" type="text" name="q"  placeholder="Ingerese texto..." >
+    <button id="search_submit" type="submit" >Buscar</button>
+</form><br> </br>
+<div class="container">
+
+<h3>{{film.title}}</h3>
+
+    <dl>
+         <dd>   Año de lanzamiento: {{ film.release_date|slice:"4" }} </dd>
+        <dd>   Director: {{ film.director }} </dd>
+        <dd>   Productor(es): {{ film.producer }} </dd>
+        <dd>   Número de Episodio: {{ film.episode_id}} </dd>
+
+    </dl>
+
+
+    <dl>
+        <dt>Personajes</dt>
+        {% for i in film.personas %}
+         <dd><a href="/personaje/{{ i.id}}/" >{{ i.nombre }}</a></dd>
+        {% endfor %}
+        <br> </br>
+        <dt>Naves</dt>
+        {% for i in film.naves %}
+         <dd><a href="/nave/{{ i.id}}/" >{{ i.nombre }}</a></dd>
+        {% endfor %}
+        <br> </br>
+        <dt>Planetas</dt>
+        {% for i in film.planetas%}
+         <dd><a href="/planeta/{{ i.id}}/" >{{ i.nombre }}</a></dd>
+        {% endfor %}
+
+    </dl>
+
+
+
+
+{% endblock %}
+

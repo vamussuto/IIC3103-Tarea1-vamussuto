@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<h2>Tarea 1</h2>
+<br> </br><h4>Realiza una búsqueda de películas, personas, naves o planetas para saber más sobre estos</h4>
+<form type="get" action="{%url 'busqueda'%}" style="margin: 0">
+    <input  id="q" type="text" name="q"  placeholder="Ingerese texto..." >
+    <button id="search_submit" type="submit" >Buscar</button>
+</form><br> </br>
+<div class="container">
+
+<h3>{{p.name}}</h3>
+    <dl>
+        <dd>   Modelo: {{ p.model }} </dd>
+        <dd>   Manufactura: {{ p.manufacturer}} </dd>
+        <dd>   Costo en créditos: {{ p.cost_in_credits}} </dd>
+        <dd>   Largo: {{ p.length}} </dd>
+        <dd>   Máxima velocidad atmosférica: {{ p.max_atmosphering_speed}} </dd>
+        <dd>   Tripulación: {{ p.crew}} </dd>
+        <dd>   Pasajeros: {{ p.passengers}} </dd>
+        <dd>   Capacidad de Carga: {{ p.cargo_capacity}} </dd>
+        <dd>   Consumables: {{ p.consumables}} </dd>
+        <dd>   Hyperdrive Rating: {{ p.hyperdrive_rating}} </dd>
+        <dd>   MGLT: {{ p.MGLT}} </dd>
+        <dd>   Clase: {{ p.starship_class}} </dd>
+    </dl>
+
+    <dl>
+        <dt>Pilotos</dt>
+        {% for i in pilotos %}
+         <dd><a href="/personaje/{{ i.id}}/" >{{ i.nombre }}</a></dd>
+        {% endfor %}
+        <br> </br>
+        <dt>Peliculas</dt>
+        {% for i in peliculas%}
+         <dd><a href="/pelicula/{{ i.id}}/" >{{ i.nombre }}</a></dd>
+        {% endfor %}
+
+    </dl>
+
+
+
+
+{% endblock %}
+

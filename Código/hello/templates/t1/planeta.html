@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<h2>Tarea 1</h2>
+<br> </br><h4>Realiza una búsqueda de películas, personas, naves o planetas para saber más sobre estos</h4>
+<form type="get" action="{%url 'busqueda'%}" style="margin: 0">
+    <input  id="q" type="text" name="q"  placeholder="Ingerese texto..." >
+    <button id="search_submit" type="submit" >Buscar</button>
+</form><br> </br>
+<div class="container">
+
+<h3>{{p.name}}</h3>
+    <dl>
+        <dd>   Período de rotación: {{ p.rotation_period }} </dd>
+        <dd>   Período orbital: {{ p.orbital_period}} </dd>
+        <dd>   Diámetro: {{ p.diameter}} </dd>
+        <dd>   Clima(s): {{ p.climate}} </dd>
+        <dd>   Gravedad: {{ p.gravity}} </dd>
+        <dd>   Terreno(s): {{ p.terrain}} </dd>
+        <dd>   Agua de superficie: {{ p.surface_water}} </dd>
+        <dd>   Población: {{ p.population}} </dd>
+
+    </dl>
+
+
+    <dl>
+          <dt>Residentes</dt>
+        {% for i in residentes %}
+         <dd><a href="/personaje/{{ i.id}}/" >{{ i.nombre }}</a></dd>
+        {% endfor %}
+        <br> </br>
+        <dt>Peliculas</dt>
+        {% for i in peliculas%}
+         <dd><a href="/pelicula/{{ i.id}}/" >{{ i.nombre }}</a></dd>
+        {% endfor %}
+
+    </dl>
+
+
+
+
+{% endblock %}
+
