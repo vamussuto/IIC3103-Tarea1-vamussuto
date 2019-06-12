@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<h2>Tarea 3</h2>
+
+
+<h3>{{p.name}}</h3>
+    <dl>
+        <dd>   Altura: {{ p.height }} </dd>
+        <dd>   Peso: {{ p.mass }} </dd>
+        <dd>   Color de pelo: {{ p.hairColor}} </dd>
+        <dd>   Color de piel: {{ p.skinColor}} </dd>
+        <dd>   Color de ojos: {{ p.eyeColor}} </dd>
+        <dd>   Cumpleaños: {{ p.birthYear}} </dd>
+        <dd>   Género: {{ p.gender}} </dd>
+        <dd>    Planeta de origen: <a href="/planeta/{{ p.homeworld.id}}/" >{{ p.homeworld.name }}</a></dd>
+
+    </dl>
+
+    <dl>
+        <br> </br>
+        <dt>Naves</dt>
+        {% for i in naves %}
+         <dd><a href="/nave/{{ i.id}}/" >{{ i.nombre }}</a></dd>
+        {% endfor %}
+        <br> </br>
+        <dt>Peliculas</dt>
+        {% for i in peliculas%}
+         <dd><a href="/pelicula/{{ i.id}}/" >{{ i.nombre }}</a></dd>
+        {% endfor %}
+
+    </dl>
+
+
+
+
+{% endblock %}
+

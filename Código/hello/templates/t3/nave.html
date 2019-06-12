@@ -2,28 +2,24 @@
 {% load staticfiles %}
 
 {% block content %}
-<h2>Tarea 1</h2>
-<br> </br><h4>Realiza una búsqueda de películas, personas, naves o planetas para saber más sobre estos</h4>
-<form type="get" action="{%url 'busqueda'%}" style="margin: 0">
-    <input  id="q" type="text" name="q"  placeholder="Ingerese texto..." >
-    <button id="search_submit" type="submit" >Buscar</button>
-</form><br> </br>
+<h2>Tarea 3</h2>
+
 <div class="container">
 
 <h3>{{p.name}}</h3>
     <dl>
         <dd>   Modelo: {{ p.model }} </dd>
-        <dd>   Manufactura: {{ p.manufacturer}} </dd>
-        <dd>   Costo en créditos: {{ p.cost_in_credits}} </dd>
+        <dd>   Manufactura: {% for m in p.manufacturers %} {{ m}} / {% endfor %} </dd>
+        <dd>   Costo en créditos: {{ p.costInCredits}} </dd>
         <dd>   Largo: {{ p.length}} </dd>
-        <dd>   Máxima velocidad atmosférica: {{ p.max_atmosphering_speed}} </dd>
+        <dd>   Máxima velocidad atmosférica: {{ p.maxAtmospheringSpeed}} </dd>
         <dd>   Tripulación: {{ p.crew}} </dd>
         <dd>   Pasajeros: {{ p.passengers}} </dd>
-        <dd>   Capacidad de Carga: {{ p.cargo_capacity}} </dd>
+        <dd>   Capacidad de Carga: {{ p.cargoCapacity}} </dd>
         <dd>   Consumables: {{ p.consumables}} </dd>
-        <dd>   Hyperdrive Rating: {{ p.hyperdrive_rating}} </dd>
+        <dd>   Hyperdrive Rating: {{ p.hyperdriveRating}} </dd>
         <dd>   MGLT: {{ p.MGLT}} </dd>
-        <dd>   Clase: {{ p.starship_class}} </dd>
+        <dd>   Clase: {{ p.starshipClass}} </dd>
     </dl>
 
     <dl>

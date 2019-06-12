@@ -15,93 +15,72 @@ def index(request):
 #    return HttpResponse('<pre>' + r.text + '</pre>')
 
 
-def home_t1(request):
-    response = requests.get("https://swapi.co/api/films/")
+def home_t3(request):
+    response = requests.get("https://swapi-graphql-integracion-t3.herokuapp.com/?query={ allFilms { edges { node { id title releaseDate director producers episodeID } } } }")
     films1 = response.content
     f = json.loads(films1)
-    return render(request, "t1/home.html", {"films": f["results"]})
+    return render(request, "t3/home.html", {"films": f["data"]["allFilms"]["edges"]})
 
-def busqueda(request):
-    ''' This could be your actual view or a new one// extraido de https://stackoverflow.com/questions/27112729/search-field-in-django-template'''
-    # Your code
-    if request.method == 'GET': # If the form is submitted
-        texto = request.GET.get('q', None).lower()
-        print(texto)
-        dic = {"personajes": [], "planetas": [], "naves": [], "peliculas": [], "error": ""}
-        #peliculas
-        for p in (json.loads(requests.get("https://swapi.co/api/films/").content))["results"]:
-            if texto in p["title"].lower():
-                dic["peliculas"].append({"id": p["url"].split("/")[5], "nombre": p["title"]})
-        # personajes
-        for p in aux_busq("https://swapi.co/api/people/", []):
-            if texto in p["name"].lower():
-                dic["personajes"].append({"id": p["url"].split("/")[5], "nombre": p["name"]})
-        # planetas
-        for p in aux_busq("https://swapi.co/api/planets/", []):
-            if texto in p["name"].lower():
-                dic["planetas"].append({"id": p["url"].split("/")[5], "nombre": p["name"]})
-        # naves
-        for p in aux_busq("https://swapi.co/api/starships/", []):
-            if texto in p["name"].lower():
-                dic["naves"].append({"id": p["url"].split("/")[5], "nombre": p["name"]})
-        #error
-        if len(dic["peliculas"]) + len(dic["naves"]) + len(dic["personajes"]) + len(dic["planetas"]) == 0:
-            dic["error"] = "No se encontraron coincidencias"
-        return render(request, "t1/busqueda.html", dic)
-        # Do whatever you need with the word the user looked for
-
-def aux_busq(url, list):
-    base = (json.loads(requests.get(url).content))
-    ini = base["results"]
-    list += ini
-    if base["next"]:
-        return aux_busq(base["next"], list)
-    else:
-        return list
 
 
 
 
 
 def pelicula(request, url):
-    f = json.loads(requests.get("https://swapi.co/api/films/"+url).content)
-    info = {"title": f["title"], "release_date": f["release_date"], "director": f["director"], "producer": f["producer"],"episode_id": f["episode_id"],
-            "personas": [], "naves": [], "planetas": []}
-    for pers in f["characters"]:
-        info["personas"].append({"id": pers.split("/")[5], "nombre": json.loads(requests.get(pers).content)["name"]})
-    for nave in f["starships"]:
-        info["naves"].append({"id": nave.split("/")[5], "nombre": json.loads(requests.get(nave).content)["name"]})
-    for planeta in f["starships"]:
-        info["planetas"].append({"id": planeta.split("/")[5], "nombre": json.loads(requests.get(planeta).content)["name"]})
-    return render(request, "t1/pelicula.html", {"film": info})
+    f = json.loads(requests.get(
+        'https://swapi-graphql-integracion-t3.herokuapp.com/?query= {film(id:"' + url + '"){title openingCrawl director producers episodeID releaseDate planetConnection { edges { node { id name } } } characterConnection { edges { node { id name } } } starshipConnection { edges { node { id name } } } } }').content)[
+        "data"]["film"]
+    info = {"title": f["title"], "release_date": f["releaseDate"], "director": f["director"], "opening" : f["openingCrawl"],
+            "producer": f["producers"], "episode_id": f["episodeID"], "personas": [], "naves": [], "planetas": []}
+
+
+    for personaje in f["characterConnection"]["edges"]:
+        #nombre = json.loads(requests.get('https://swapi-graphql-integracion-t3.herokuapp.com/?query={ person(id:"' + personaje["node"]["id"] + '") { name } }').content)["data"]["person"]["name"]
+        info["personas"].append({"id": personaje["node"]["id"], "nombre": personaje["node"]["name"]})
+
+    for nave in f["starshipConnection"]["edges"]:
+        #nombre = json.loads(requests.get('https://swapi-graphql-integracion-t3.herokuapp.com/?query={ starship(id: "' + nave["node"]["id"] + '") { name } }').content)["data"]["starship"]["name"]
+        info["naves"].append({"id": nave["node"]["id"], "nombre": nave["node"]["name"]})
+
+    for planeta in f["planetConnection"]["edges"]:
+        #nombre = json.loads(requests.get('https://swapi-graphql-integracion-t3.herokuapp.com/?query={ planet(id: "' + planeta["node"]["id"] + '") { name } }').content)["data"]["planet"]["name"]
+        info["planetas"].append({"id": planeta["node"]["id"], "nombre": planeta["node"]["name"]})
+    return render(request, "t3/pelicula.html", {"film": info})
 
 def personaje(request, url):
-    p = json.loads(requests.get("https://swapi.co/api/people/" + url).content)
-    dic = {"p": p,  "planeta_id": p["homeworld"].split("/")[5], "planeta_nombre": json.loads(requests.get(p["homeworld"]).content)["name"], "naves": [], "peliculas":[] }
-    for nave in p["starships"]:
-        dic["naves"].append({"id": nave.split("/")[5], "nombre": json.loads(requests.get(nave).content)["name"]})
-    for pelicula in p["films"]:
-        dic["peliculas"].append({"id": pelicula.split("/")[5], "nombre": json.loads(requests.get(pelicula).content)["title"]})
-    return render(request, "t1/personaje.html", dic)
+    p = json.loads(requests.get('https://swapi-graphql-integracion-t3.herokuapp.com/?query={ person(id:"'+url+'") { name hairColor id eyeColor birthYear mass height gender skinColor filmConnection { edges { node { id title} } } homeworld { id name} starshipConnection { edges { node { id name } } } } }').content)["data"]["person"]
+    dic = {"p": p, "homeworld":[], "naves": [], "peliculas":[] }
+    #for planeta in p["homeworld"]:
+     #   print(planeta)
+        #resp = json.loads(requests.get('https://swapi-graphql-integracion-t3.herokuapp.com/?query={ planet(id: "'+planeta["id"]+'") { name } }').content)["data"]["planet"]["name"]
+        #dic["homeworld"].append({"id": planeta["id"], "nombre": resp})
+    for nave in p['starshipConnection']['edges']:
+        dic["naves"].append({"id": nave["node"]["id"], "nombre": nave["node"]["name"] })
+
+    for pelicula in p["filmConnection"]["edges"]:
+        dic["peliculas"].append({"id": pelicula["node"]["id"], "nombre": pelicula["node"]["title"]})
+    return render(request, "t3/personaje.html", dic)
 
 def nave(request, url):
-    p = json.loads(requests.get("https://swapi.co/api/starships/" + url).content)
+    p = json.loads(requests.get('https://swapi-graphql-integracion-t3.herokuapp.com/?query={ starship(id: "'+url+'") { name model manufacturers costInCredits length maxAtmospheringSpeed crew passengers cargoCapacity consumables hyperdriveRating MGLT starshipClass pilotConnection { edges { node { id name } } } filmConnection { edges { node { id title} } } } }').content)["data"]["starship"]
     dic = {"p": p, "pilotos":[], "peliculas":[]}
-    for pelicula in p["films"]:
-        dic["peliculas"].append({"id": pelicula.split("/")[5], "nombre": json.loads(requests.get(pelicula).content)["title"]})
-    for piloto in p["pilots"]:
-        dic["pilotos"].append({"id": piloto.split("/")[5], "nombre": json.loads(requests.get(piloto).content)["name"]})
-    return render(request, "t1/nave.html", dic)
+    for pelicula in p["filmConnection"]["edges"]:
+        dic["peliculas"].append({"id": pelicula["node"]["id"], "nombre":pelicula["node"]["title"]})
+
+    for piloto in p["pilotConnection"]["edges"]:
+        dic["pilotos"].append({"id": piloto["node"]["id"], "nombre": piloto["node"]["name"] })
+    return render(request, "t3/nave.html", dic)
 
 
 def planeta(request, url):
-    p = json.loads(requests.get("https://swapi.co/api/planets/" + url).content)
+    p = json.loads(requests.get('https://swapi-graphql-integracion-t3.herokuapp.com/?query={ planet(id: "'+url+'") { name rotationPeriod residentConnection { edges { node { id name} } } orbitalPeriod diameter climates gravity terrains surfaceWater population filmConnection { edges { node { id title} } } } }').content)["data"]["planet"]
     dic = {"p": p,  "peliculas": [], "residentes":[]}
-    for pelicula in p["films"]:
-        dic["peliculas"].append({"id": pelicula.split("/")[5], "nombre": json.loads(requests.get(pelicula).content)["title"]})
-    for res in p["residents"]:
-        dic["residentes"].append({"id": res.split("/")[5], "nombre": json.loads(requests.get(res).content)["name"]})
-    return render(request, "t1/planeta.html", dic)
+    for pelicula in p["filmConnection"]["edges"]:
+        dic["peliculas"].append({"id": pelicula["node"]["id"], "nombre": pelicula["node"]["title"]})
+    for r in p["residentConnection"]["edges"]:
+        dic["residentes"].append({"id": r["node"]["id"], "nombre":r["node"]["name"] })
+
+    return render(request, "t3/planeta.html", dic)
 
 
 

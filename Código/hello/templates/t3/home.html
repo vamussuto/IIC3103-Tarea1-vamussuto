@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<h2>Tarea 3</h2>
+
+<div class="container">
+
+{% for film in films %}
+    <dl>
+        <a href="/pelicula/{{film.node.id}}/" >{{ film.node.title }}</a>
+         <dd>   Año de lanzamiento: {{ film.node.releaseDate|slice:"4" }} </dd>
+        <dd>   Director: {{ film.node.director }} </dd>
+        <dd>   Productor(es):{% for p in film.node.producers %} {{ p}} / {% endfor %}</dd>
+        <dd>   Número de Episodio: {{ film.node.episodeID}} </dd>
+
+    </dl>
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+{% endblock %}
+

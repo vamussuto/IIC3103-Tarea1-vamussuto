@@ -16,13 +16,13 @@ import hello.views
 
 urlpatterns = [
     path("", hello.views.index, name="index"),
-    path("home_t1/", hello.views.home_t1, name="home_t1"),
+    path("home_t3/", hello.views.home_t3, name="home_t3"),
     #path("busqueda?search_box=<texto>", hello.views.busqueda, name="busqueda"),
     path("pelicula/<url>/", hello.views.pelicula, name="pelicula"),
     path("personaje/<url>/", hello.views.personaje, name="personaje"),
     path("nave/<url>/", hello.views.nave, name="nave"),
     path("planeta/<url>/", hello.views.planeta, name="planeta"),
-    path("busqueda/$", hello.views.busqueda, name="busqueda"),
+    #path("busqueda/$", hello.views.busqueda, name="busqueda"),
     #re_path(r'^busqueda/(?P<url>\w{1,50})/$', hello.views.busqueda, name="busqueda"),
     path("db/", hello.views.db, name="db"),
     path("admin/", admin.site.urls),
