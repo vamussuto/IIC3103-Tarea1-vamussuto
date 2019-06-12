@@ -35,25 +35,18 @@ def pelicula(request, url):
 
 
     for personaje in f["characterConnection"]["edges"]:
-        #nombre = json.loads(requests.get('https://swapi-graphql-integracion-t3.herokuapp.com/?query={ person(id:"' + personaje["node"]["id"] + '") { name } }').content)["data"]["person"]["name"]
         info["personas"].append({"id": personaje["node"]["id"], "nombre": personaje["node"]["name"]})
 
     for nave in f["starshipConnection"]["edges"]:
-        #nombre = json.loads(requests.get('https://swapi-graphql-integracion-t3.herokuapp.com/?query={ starship(id: "' + nave["node"]["id"] + '") { name } }').content)["data"]["starship"]["name"]
         info["naves"].append({"id": nave["node"]["id"], "nombre": nave["node"]["name"]})
 
     for planeta in f["planetConnection"]["edges"]:
-        #nombre = json.loads(requests.get('https://swapi-graphql-integracion-t3.herokuapp.com/?query={ planet(id: "' + planeta["node"]["id"] + '") { name } }').content)["data"]["planet"]["name"]
         info["planetas"].append({"id": planeta["node"]["id"], "nombre": planeta["node"]["name"]})
     return render(request, "t3/pelicula.html", {"film": info})
 
 def personaje(request, url):
     p = json.loads(requests.get('https://swapi-graphql-integracion-t3.herokuapp.com/?query={ person(id:"'+url+'") { name hairColor id eyeColor birthYear mass height gender skinColor filmConnection { edges { node { id title} } } homeworld { id name} starshipConnection { edges { node { id name } } } } }').content)["data"]["person"]
     dic = {"p": p, "homeworld":[], "naves": [], "peliculas":[] }
-    #for planeta in p["homeworld"]:
-     #   print(planeta)
-        #resp = json.loads(requests.get('https://swapi-graphql-integracion-t3.herokuapp.com/?query={ planet(id: "'+planeta["id"]+'") { name } }').content)["data"]["planet"]["name"]
-        #dic["homeworld"].append({"id": planeta["id"], "nombre": resp})
     for nave in p['starshipConnection']['edges']:
         dic["naves"].append({"id": nave["node"]["id"], "nombre": nave["node"]["name"] })
 
